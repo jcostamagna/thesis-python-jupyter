@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{thesis\_test}
+    \title{Thesis\_over\_sampling\_data-with-weigths}
     
     
     
@@ -280,1594 +280,342 @@
     
 
     
-    \section{Conect to db}\label{conect-to-db}
+    \section{Imports}\label{imports}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}52}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
-         \PY{k+kn}{import} \PY{n+nn}{psycopg2}
-         
-         \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
-         
-         \PY{k+kn}{import} \PY{n+nn}{matplotlib}
-         \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
-         \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
-         \PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k}{import} \PY{n}{datetime}
-         \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{neighbors}\PY{p}{,} \PY{n}{datasets}
-         \PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{colors} \PY{k}{import} \PY{n}{ListedColormap}
-         
-         \PY{c+c1}{\PYZsh{} Define our connection string}
-         \PY{n}{conn\PYZus{}string} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{host=}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{localhost}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ port=}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{5432}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ dbname=}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{GTA}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ user=}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{jcostamagna}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{\PYZdq{}}
-         
-         \PY{c+c1}{\PYZsh{} print the connection string we will use to connect}
-         \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Connecting to database}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{	\PYZhy{}\PYZgt{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} get a connection, if a connect cannot be made an exception will be raised here}
-         \PY{n}{conn} \PY{o}{=} \PY{n}{psycopg2}\PY{o}{.}\PY{n}{connect}\PY{p}{(}\PY{n}{conn\PYZus{}string}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{} conn.cursor will return a cursor object, you can use this cursor to perform queries}
-         \PY{n}{cursor} \PY{o}{=} \PY{n}{conn}\PY{o}{.}\PY{n}{cursor}\PY{p}{(}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Connected!}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}} \PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{}cursor.execute(\PYZsq{}SELECT * FROM  public.\PYZdq{}GTA\PYZus{}DataView\PYZdq{};\PYZsq{})}
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{psycopg2}
+        
+        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+        
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k}{import} \PY{n}{datetime}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{neighbors}\PY{p}{,} \PY{n}{datasets}
+        \PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{colors} \PY{k}{import} \PY{n}{ListedColormap}
+\end{Verbatim}
+
+
+    \section{Read Data Set}\label{read-data-set}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{mergeData\PYZus{}v4.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}2}]:}    speed\_total\_mean  steering\_total\_mean  brake\_total\_mean  \textbackslash{}
+        0          5.919151             0.503649          0.965743   
+        1          7.580378             0.499771          0.891302   
+        2          9.474048             0.494557          0.952182   
+        3         11.669419             0.500661          0.891913   
+        4         12.187044             0.499769          0.861132   
+        
+           throttle\_total\_mean  acceleration\_total\_mean  speed\_total\_var  \textbackslash{}
+        0             0.820576                 0.030731        13.796202   
+        1             0.878839                -0.026652        31.451253   
+        2             0.781126                 0.006292        53.873833   
+        3             0.522365                 0.008028        47.209285   
+        4             0.558120                 0.001881        42.031423   
+        
+           steering\_total\_var  brake\_total\_var  throttle\_total\_var  \textbackslash{}
+        0            0.000655         0.014468            0.028719   
+        1            0.000345         0.058767            0.010391   
+        2            0.001231         0.022506            0.045416   
+        3            0.000396         0.055982            0.112551   
+        4            0.000430         0.102442            0.079023   
+        
+           acceleration\_total\_var  total\_time  distancePed  max\_speed       PKE  \textbackslash{}
+        0                0.039370   15.405173    89.992450  11.669766  1.932290   
+        1                0.063480   11.412381    85.063860  13.499710  0.878493   
+        2                0.106281  102.356492   789.212800  25.851397  2.857169   
+        3                0.159198    7.505478    88.011610  20.055070  2.969647   
+        4                0.158822    8.681609   105.973686  19.697004  4.033468   
+        
+           PKE\_Steering  speed\_react  reaction\_time  hadCollision  
+        0     -0.000150     7.754880       1.048791             0  
+        1      0.000274    13.472353       2.106615             0  
+        2      0.000108    25.585112       0.079211             1  
+        3     -0.000258    19.412087       1.161592             0  
+        4      0.000066    18.461056       1.275896             0  
+\end{Verbatim}
+            
+    \subsubsection{Distribution}\label{distribution}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{num\PYZus{}obs} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{)}
+        \PY{n}{num\PYZus{}true} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+        \PY{n}{num\PYZus{}false} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of True cases:  }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:2.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{num\PYZus{}true}\PY{p}{,} \PY{p}{(}\PY{n}{num\PYZus{}true}\PY{o}{/}\PY{n}{num\PYZus{}obs}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of False cases: }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:2.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{num\PYZus{}false}\PY{p}{,} \PY{p}{(}\PY{n}{num\PYZus{}false}\PY{o}{/}\PY{n}{num\PYZus{}obs}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Connecting to database
-	->
-Connected!
-
+Number of True cases:  54 (9.66\%)
+Number of False cases: 505 (90.34\%)
 
     \end{Verbatim}
 
-    \section{Create dataframes}\label{create-dataframes}
+    \subsection{Split data set}\label{split-data-set}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{cursor}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SELECT time, idsession, scenario,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 1 THEN value END) as posX,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MAX(CASE data\PYZus{}type\PYZus{}id WHEN 2 THEN value END) as posY,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 10 THEN value END) as hadCollision,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 17 THEN value END) as pedId,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 15 THEN value END) as nextPedRunning,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 11 THEN value END) as distancePed,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 8 THEN value END) as speed,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 12 THEN value END) as posPedX,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 13 THEN value END) as posPedY,}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 596 THEN value END) as currentDistance}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ FROM datagta gta WHERE gta.idsession \PYZgt{}= 144 AND gta.data\PYZus{}type\PYZus{}id in (1,2,8,10,11,12,13,15,17,596)}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ AND gta.idsession not in (145,146,147,148,149,151,155,158,162,164)}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ GROUP BY time, idsession, scenario;}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{rows} \PY{o}{=} \PY{n}{cursor}\PY{o}{.}\PY{n}{fetchall}\PY{p}{(}\PY{p}{)}
-         \PY{n}{timestamps} \PY{o}{=} \PY{p}{[}\PY{n}{row}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{row} \PY{o+ow}{in} \PY{n}{rows}\PY{p}{]}
-         \PY{k}{if} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{timestamps}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:}
-             \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Something went wrong}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{firstTime} \PY{o}{=} \PY{n}{timestamps}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
-         \PY{n}{lastTime} \PY{o}{=} \PY{n}{timestamps}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
-         \PY{n}{dfGTA} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{rows}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{n}{timestamps}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}dfDiffGTA = dfGTA.diff()}
-         \PY{n}{dfGTA}\PY{o}{.}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pos\PYZus{}X}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pos\PYZus{}Y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nextPedRunning}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{distancePed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{speed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{posPedX}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{posPedY}\PY{l+s+s1}{\PYZsq{}} \PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{currentDistance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{cursor}\PY{o}{.}\PY{n}{execute}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{SELECT time, idsession, scenario,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 1 THEN value END) as Steering,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MAX(CASE data\PYZus{}type\PYZus{}id WHEN 2 THEN value END) as Brake,}\PY{l+s+s1}{\PYZsq{}} \PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ MAX(CASE data\PYZus{}type\PYZus{}id WHEN 3 THEN value END) as Throttle }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ FROM datasteering gta WHERE gta.idsession \PYZgt{}= 144 AND gta.data\PYZus{}type\PYZus{}id in (1,2,3)}\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ AND gta.idsession not in (145,146,147,148,149,151,155,158,162,164) }\PY{l+s+s1}{\PYZsq{}}\PY{o}{+}
-                        \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ GROUP BY time, idsession, scenario;}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{rows} \PY{o}{=} \PY{n}{cursor}\PY{o}{.}\PY{n}{fetchall}\PY{p}{(}\PY{p}{)}
-         \PY{n}{timestamps} \PY{o}{=} \PY{p}{[}\PY{n}{row}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{row} \PY{o+ow}{in} \PY{n}{rows}\PY{p}{]}
-         \PY{n}{df\PYZus{}steer} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{rows}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{n}{timestamps}\PY{p}{)}
-         \PY{n}{df\PYZus{}steer}\PY{o}{.}\PY{n}{columns}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{steering}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brake}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}  \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{throttle}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{freq\PYZus{}resample} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{50000U}\PY{l+s+s1}{\PYZsq{}}
-         \PY{n}{df\PYZus{}steer} \PY{o}{=} \PY{n}{df\PYZus{}steer}\PY{o}{.}\PY{n}{resample}\PY{p}{(}\PY{n}{freq\PYZus{}resample}\PY{p}{)}\PY{o}{.}\PY{n}{ffill}\PY{p}{(}\PY{p}{)}
-         \PY{n}{freq\PYZus{}resample} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{50000U}\PY{l+s+s1}{\PYZsq{}}
-         \PY{n}{dfGTA} \PY{o}{=} \PY{n}{dfGTA}\PY{o}{.}\PY{n}{resample}\PY{p}{(}\PY{n}{freq\PYZus{}resample}\PY{p}{)}\PY{o}{.}\PY{n}{ffill}\PY{p}{(}\PY{p}{)}
-         \PY{n}{steer} \PY{o}{=} \PY{n}{df\PYZus{}steer}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{df\PYZus{}steer}\PY{o}{.}\PY{n}{columns}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{dfGTA}\PY{p}{,} \PY{n}{steer}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{join}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{inner}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}55}]:} \PY{c+c1}{\PYZsh{}pedCross = dfGTA[(dfGTA.nextPedRunning == True) \PYZam{} (dfGTA.distancePed \PYZlt{} 20)  \PYZam{} (dfGTA.scenario != 7) \PYZam{} (dfGTA.scenario != 8)]}
-         \PY{c+c1}{\PYZsh{}df\PYZus{}joined[\PYZsq{}acceleration\PYZsq{}] = df\PYZus{}joined[\PYZsq{}speed\PYZsq{}].diff()}
-         \PY{n}{df\PYZus{}joined} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{o}{\PYZti{}}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{index}\PY{o}{.}\PY{n}{duplicated}\PY{p}{(}\PY{p}{)}\PY{p}{]}
-         \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}55}]:}                                               time  session\_id  scenario  \textbackslash{}
-         2017-10-04 12:46:18.050                        NaT         NaN       NaN   
-         2017-10-04 12:46:18.100 2017-10-04 12:46:18.071232       144.0       7.0   
-         2017-10-04 12:46:18.150 2017-10-04 12:46:18.071232       144.0       7.0   
-         2017-10-04 12:46:18.200 2017-10-04 12:46:18.071232       144.0       7.0   
-         2017-10-04 12:46:18.250 2017-10-04 12:46:18.071232       144.0       7.0   
+{\color{incolor}In [{\color{incolor}50}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
          
-                                     Pos\_X     Pos\_Y  hadCollision  pedId  \textbackslash{}
-         2017-10-04 12:46:18.050       NaN       NaN           NaN    NaN   
-         2017-10-04 12:46:18.100 -975.7495  82.24962           0.0   17.0   
-         2017-10-04 12:46:18.150 -975.7495  82.24962           0.0   17.0   
-         2017-10-04 12:46:18.200 -975.7495  82.24962           0.0   17.0   
-         2017-10-04 12:46:18.250 -975.7495  82.24962           0.0   17.0   
+         \PY{n}{data} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+         \PY{n}{X} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)} 
+         \PY{n}{Y} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
          
-                                  nextPedRunning  distancePed  speed   posPedX  \textbackslash{}
-         2017-10-04 12:46:18.050             NaN          NaN    NaN       NaN   
-         2017-10-04 12:46:18.100             0.0    70.352844    0.0  154.0415   
-         2017-10-04 12:46:18.150             0.0    70.352844    0.0  154.0415   
-         2017-10-04 12:46:18.200             0.0    70.352844    0.0  154.0415   
-         2017-10-04 12:46:18.250             0.0    70.352844    0.0  154.0415   
-         
-                                   posPedY  currentDistance                      time2  \textbackslash{}
-         2017-10-04 12:46:18.050       NaN              NaN 2017-10-04 12:46:18.048674   
-         2017-10-04 12:46:18.100 -23.48739       1253.50293 2017-10-04 12:46:18.088780   
-         2017-10-04 12:46:18.150 -23.48739       1253.50293 2017-10-04 12:46:18.148940   
-         2017-10-04 12:46:18.200 -23.48739       1253.50293 2017-10-04 12:46:18.188544   
-         2017-10-04 12:46:18.250 -23.48739       1253.50293 2017-10-04 12:46:18.248732   
-         
-                                  steering    brake  throttle  
-         2017-10-04 12:46:18.050   33096.0  65535.0   65535.0  
-         2017-10-04 12:46:18.100   33096.0  65535.0   65535.0  
-         2017-10-04 12:46:18.150   33096.0  65535.0   65535.0  
-         2017-10-04 12:46:18.200   33096.0  65535.0   65535.0  
-         2017-10-04 12:46:18.250   33096.0  65535.0   65535.0  
-\end{Verbatim}
-            
-    \section{Backup Csv}\label{backup-csv}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}56}]:} \PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{DataJoined.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{index\PYZus{}col}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)} 
-         \PY{n}{data} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.4}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{stratify}\PY{o}{=}\PY{n}{Y}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{df\PYZus{}joined} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{pedId} \PY{o}{!=} \PY{l+m+mi}{16}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{pedId} \PY{o}{!=} \PY{l+m+mi}{17}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{speed} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{scenario} \PY{o}{!=} \PY{l+m+mi}{7}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{scenario} \PY{o}{!=} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{]}
-         \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}57}]:}                                                time  session\_id  scenario  \textbackslash{}
-         2017-10-04 12:50:28.400  2017-10-04 12:50:28.383484       144.0       1.0   
-         2017-10-04 12:50:28.450  2017-10-04 12:50:28.437127       144.0       1.0   
-         2017-10-04 12:50:28.500  2017-10-04 12:50:28.494279       144.0       1.0   
-         2017-10-04 12:50:28.550  2017-10-04 12:50:28.520850       144.0       1.0   
-         2017-10-04 12:50:28.600  2017-10-04 12:50:28.584519       144.0       1.0   
-         
-                                       Pos\_X      Pos\_Y  hadCollision  pedId  \textbackslash{}
-         2017-10-04 12:50:28.400 -975.703700  82.260376           0.0    1.0   
-         2017-10-04 12:50:28.450 -975.709534  82.251080           0.0    1.0   
-         2017-10-04 12:50:28.500 -975.714233  82.246090           0.0    1.0   
-         2017-10-04 12:50:28.550 -975.716000  82.244156           0.0    1.0   
-         2017-10-04 12:50:28.600 -975.718100  82.241540           0.0    1.0   
-         
-                                  nextPedRunning  distancePed     speed   posPedX  \textbackslash{}
-         2017-10-04 12:50:28.400             0.0    89.979675  0.013278 -885.6892   
-         2017-10-04 12:50:28.450             0.0    89.984790  0.135856 -885.6892   
-         2017-10-04 12:50:28.500             0.0    89.988880  0.125762 -885.6892   
-         2017-10-04 12:50:28.550             0.0    89.990330  0.102796 -885.6892   
-         2017-10-04 12:50:28.600             0.0    89.991715  0.047856 -885.6892   
-         
-                                   posPedY  currentDistance  \textbackslash{}
-         2017-10-04 12:50:28.400  70.21315       1253.45900   
-         2017-10-04 12:50:28.450  70.21315       1253.46400   
-         2017-10-04 12:50:28.500  70.21315       1253.46814   
-         2017-10-04 12:50:28.550  70.21315       1253.46960   
-         2017-10-04 12:50:28.600  70.21315       1253.47168   
-         
-                                                      time.1  steering    brake  \textbackslash{}
-         2017-10-04 12:50:28.400  2017-10-04 12:50:28.384988   32307.0  65535.0   
-         2017-10-04 12:50:28.450  2017-10-04 12:50:28.444647   32307.0  65535.0   
-         2017-10-04 12:50:28.500  2017-10-04 12:50:28.484754   32307.0  65535.0   
-         2017-10-04 12:50:28.550  2017-10-04 12:50:28.544914   32307.0  65535.0   
-         2017-10-04 12:50:28.600  2017-10-04 12:50:28.585020   32307.0  65535.0   
-         
-                                  throttle  
-         2017-10-04 12:50:28.400   65535.0  
-         2017-10-04 12:50:28.450   65535.0  
-         2017-10-04 12:50:28.500   65535.0  
-         2017-10-04 12:50:28.550   65535.0  
-         2017-10-04 12:50:28.600   65535.0  
-\end{Verbatim}
-            
-    \subsection{Clean Data}\label{clean-data}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{steering}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{steering}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{divide}\PY{p}{(}\PY{l+m+mi}{65535}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brake}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brake}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{divide}\PY{p}{(}\PY{l+m+mi}{65535}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{throttle}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{throttle}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{divide}\PY{p}{(}\PY{l+m+mi}{65535}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{acceleration}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{speed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{p}{)}
-         \PY{n}{df\PYZus{}joined} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{pedId} \PY{o}{!=} \PY{l+m+mi}{16}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{pedId} \PY{o}{!=} \PY{l+m+mi}{17}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{speed} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{)}  \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{scenario} \PY{o}{!=} \PY{l+m+mi}{7}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{scenario} \PY{o}{!=} \PY{l+m+mi}{8}\PY{p}{)}\PY{p}{]}
-\end{Verbatim}
-
-
-    \section{Means fields}\label{means-fields}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}59}]:} \PY{n}{means} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}clean the ones in which didnt run the pedestrian}
-         \PY{n}{means} \PY{o}{=} \PY{n}{means}\PY{p}{[}\PY{n}{means}\PY{o}{.}\PY{n}{nextPedRunning} \PY{o}{!=} \PY{l+m+mi}{0}\PY{p}{]}
-         \PY{n}{means\PYZus{}cleaned} \PY{o}{=} \PY{n}{means}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{means}\PY{o}{.}\PY{n}{columns}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{11}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
-         
-         \PY{c+c1}{\PYZsh{}means\PYZus{}cleaned = means.dropna(thresh=11)}
-         \PY{c+c1}{\PYZsh{}df\PYZus{}joined = df\PYZus{}joined[df\PYZus{}joined.notnull()]}
-         \PY{c+c1}{\PYZsh{}session\PYZus{}id	scenario	pedId	hadCollision speed		steering	brake	throttle	acceleration}
-         \PY{c+c1}{\PYZsh{}\PYZsh{}means\PYZus{}cleaned[\PYZsq{}hadCollision\PYZsq{}] = np.where(means\PYZus{}cleaned[\PYZsq{}hadCollision\PYZsq{}] == 0, False, True)}
-         
-         \PY{c+c1}{\PYZsh{}means\PYZus{}cleaned.drop(means\PYZus{}cleaned[means\PYZus{}cleaned.nextPedRunning == 0])}
-         \PY{n}{means\PYZus{}cleaned}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}59}]:}    session\_id  scenario  pedId  hadCollision      speed  steering     brake  \textbackslash{}
-         0       144.0       1.0    1.0      0.000000   5.919151  0.503649  0.965743   
-         1       144.0       1.0    3.0      0.000000   7.580378  0.499771  0.891302   
-         2       144.0       1.0   15.0      0.008366   9.474048  0.494557  0.952182   
-         3       144.0       2.0    0.0      0.000000   3.398595  0.523305  0.960227   
-         4       144.0       2.0    2.0      0.000000  11.669419  0.500661  0.891913   
-         
-            throttle  acceleration  
-         0  0.820576      0.030731  
-         1  0.878839     -0.026652  
-         2  0.781126      0.006292  
-         3  0.858795      0.027363  
-         4  0.522365      0.008028  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}60}]:} \PY{n}{means\PYZus{}cleaned}\PY{o}{.}\PY{n}{shape}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}60}]:} (655, 9)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}61}]:} \PY{c+c1}{\PYZsh{}Rows in which the pedestrian didnt run}
-         \PY{n}{means}\PY{p}{[}\PY{n}{means}\PY{o}{.}\PY{n}{nextPedRunning} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}61}]:} Empty DataFrame
-         Columns: [session\_id, scenario, pedId, Pos\_X, Pos\_Y, hadCollision, nextPedRunning, distancePed, speed, posPedX, posPedY, currentDistance, steering, brake, throttle, acceleration]
-         Index: []
-\end{Verbatim}
-            
-    \section{Variances}\label{variances}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}62}]:} \PY{n}{variance} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{var}\PY{p}{(}\PY{p}{)}
-         \PY{n}{variance\PYZus{}cleaned} \PY{o}{=} \PY{n}{variance}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{variance}\PY{o}{.}\PY{n}{columns}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{11}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}variance\PYZus{}cleaned[\PYZsq{}hadCollision\PYZsq{}] = np.where(variance\PYZus{}cleaned[\PYZsq{}hadCollision\PYZsq{}] == 0, False, True)}
-         \PY{n}{variance\PYZus{}cleaned}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}62}]:}    session\_id  scenario  pedId      speed  steering     brake  throttle  \textbackslash{}
-         0       144.0       1.0    1.0  13.796202  0.000655  0.014468  0.028719   
-         1       144.0       1.0    3.0  31.451253  0.000345  0.058767  0.010391   
-         2       144.0       1.0   15.0  53.873833  0.001231  0.022506  0.045416   
-         3       144.0       2.0    0.0   5.036717  0.000101  0.018643  0.075860   
-         4       144.0       2.0    2.0  47.209285  0.000396  0.055982  0.112551   
-         
-            acceleration  
-         0      0.039370  
-         1      0.063480  
-         2      0.106281  
-         3      0.027735  
-         4      0.159198  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}63}]:} \PY{n}{variance\PYZus{}cleaned}\PY{o}{.}\PY{n}{shape}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}63}]:} (671, 8)
-\end{Verbatim}
-            
-    \section{Between start, run and
-crash}\label{between-start-run-and-crash}
-
-    \subsection{Total time}\label{total-time}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}64}]:} \PY{n}{first} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{first}\PY{p}{(}\PY{p}{)}
-         \PY{n}{last} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{last}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}65}]:} \PY{n}{total\PYZus{}time} \PY{o}{=} \PY{n}{first}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{first}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timeFinal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{last}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{total\PYZus{}time}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{first}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timeFinal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{first}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{dt}\PY{o}{.}\PY{n}{total\PYZus{}seconds}\PY{p}{(}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}plt.plot(first[\PYZsq{}total\PYZus{}time\PYZsq{}])}
-         \PY{c+c1}{\PYZsh{}s.dt.total\PYZus{}seconds()}
-         \PY{n}{total\PYZus{}time}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}65}]:}    session\_id  scenario  pedId  total\_time
-         0       144.0       1.0    1.0   15.405173
-         1       144.0       1.0    3.0   11.412381
-         2       144.0       1.0   15.0  102.356492
-         3       144.0       2.0    0.0   14.315100
-         4       144.0       2.0    2.0    7.505478
-\end{Verbatim}
-            
-    \subsection{Initial distance}\label{initial-distance}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}66}]:} \PY{n}{initial\PYZus{}distance} \PY{o}{=} \PY{n}{first}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{distancePed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{initial\PYZus{}distance}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}\PYZsh{} desconfianza con el index 2 y su tiempo}
-         \PY{c+c1}{\PYZsh{}144.0	1.0	15.0}
-         
-         \PY{c+c1}{\PYZsh{}testing\PYZus{}distance = df\PYZus{}joined[(df\PYZus{}joined.pedId == 15)  \PYZam{} (df\PYZus{}joined.scenario == 1)  \PYZam{} (df\PYZus{}joined.session\PYZus{}id == 144) ]}
-         \PY{c+c1}{\PYZsh{}plt.plot(testing\PYZus{}distance[\PYZsq{}distancePed\PYZsq{}])}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}66}]:}    session\_id  scenario  pedId  distancePed
-         0       144.0       1.0    1.0    89.979675
-         1       144.0       1.0    3.0    11.443494
-         2       144.0       1.0   15.0    10.211066
-         3       144.0       2.0    0.0    47.977978
-         4       144.0       2.0    2.0     3.084074
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{max\PYZus{}values} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}
-         \PY{n}{initial\PYZus{}distance} \PY{o}{=} \PY{n}{max\PYZus{}values}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{distancePed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{initial\PYZus{}distance}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}67}]:}    session\_id  scenario  pedId  distancePed
-         0       144.0       1.0    1.0    89.992450
-         1       144.0       1.0    3.0    85.063860
-         2       144.0       1.0   15.0   789.212800
-         3       144.0       2.0    0.0    47.977978
-         4       144.0       2.0    2.0    88.011610
-\end{Verbatim}
-            
-    \subsection{Max Speed}\label{max-speed}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}68}]:} \PY{n}{max\PYZus{}speed} \PY{o}{=} \PY{n}{max\PYZus{}values}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{speed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{max\PYZus{}speed}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}68}]:}    session\_id  scenario  pedId      speed
-         0       144.0       1.0    1.0  11.669766
-         1       144.0       1.0    3.0  13.499710
-         2       144.0       1.0   15.0  25.851397
-         3       144.0       2.0    0.0  10.266865
-         4       144.0       2.0    2.0  20.055070
-\end{Verbatim}
-            
-    \subsection{Before pedestrian crossed}\label{before-pedestrian-crossed}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}69}]:} \PY{k}{def} \PY{n+nf}{delete\PYZus{}unused\PYZus{}columns}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pos\PYZus{}X}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Pos\PYZus{}Y}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{distancePed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{nextPedRunning}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{posPedX}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{posPedY}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{currentDistance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}70}]:} \PY{n}{pedDidNotCross} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{nextPedRunning} \PY{o}{==} \PY{k+kc}{False}\PY{p}{)}\PY{p}{]}
-         \PY{n}{firstRowPedDidNotCross} \PY{o}{=} \PY{n}{pedDidNotCross}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{first}\PY{p}{(}\PY{p}{)}
-         \PY{n}{lastRowPedDidNotCross} \PY{o}{=} \PY{n}{pedDidNotCross}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{last}\PY{p}{(}\PY{p}{)}
-         \PY{n}{meansPedDidNotCross} \PY{o}{=} \PY{n}{pedDidNotCross}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
-         \PY{n}{varPedDidNotCross} \PY{o}{=} \PY{n}{pedDidNotCross}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{var}\PY{p}{(}\PY{p}{)}
-         \PY{n}{delete\PYZus{}unused\PYZus{}columns}\PY{p}{(}\PY{n}{meansPedDidNotCross}\PY{p}{)}
-         \PY{n}{delete\PYZus{}unused\PYZus{}columns}\PY{p}{(}\PY{n}{varPedDidNotCross}\PY{p}{)}
-\end{Verbatim}
-
-
-    \subsubsection{Total time before run}\label{total-time-before-run}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}71}]:} \PY{n}{beforePedCross} \PY{o}{=} \PY{n}{firstRowPedDidNotCross}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{firstRowPedDidNotCross}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timeFinal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{lastRowPedDidNotCross}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{beforePedCross}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{total\PYZus{}time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{firstRowPedDidNotCross}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{timeFinal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{firstRowPedDidNotCross}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-         \PY{n}{beforePedCross}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}71}]:}    session\_id  scenario  pedId      total\_time
-         0       144.0       1.0    1.0 00:00:10.091857
-         1       144.0       1.0    3.0 00:00:03.673778
-         2       144.0       1.0   15.0 00:01:34.469000
-         3       144.0       2.0    0.0 00:00:13.052240
-         4       144.0       2.0    2.0 00:00:02.488626
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}72}]:} \PY{n}{beforePedCrossMerge} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{varPedDidNotCross}\PY{p}{,} \PY{n}{meansPedDidNotCross} \PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{suffixes}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}before\PYZus{}var}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}before\PYZus{}mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
-         \PY{n}{delete\PYZus{}unused\PYZus{}columns}\PY{p}{(}\PY{n}{beforePedCrossMerge}\PY{p}{)}
-         \PY{n}{beforePedCrossTotalColumns} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{beforePedCrossMerge}\PY{p}{,} \PY{n}{beforePedCross} \PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{beforePedCrossTotalColumns}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}72}]:}    session\_id  scenario  pedId  speed\_before\_var  steering\_before\_var  \textbackslash{}
-         0       144.0       1.0    1.0         13.894033             0.000338   
-         1       144.0       1.0    3.0          1.185339             0.000238   
-         2       144.0       1.0   15.0         54.290571             0.001118   
-         3       144.0       2.0    0.0          4.118861             0.000045   
-         4       144.0       2.0    2.0          6.272065             0.000233   
-         
-            brake\_before\_var  throttle\_before\_var  acceleration\_before\_var  \textbackslash{}
-         0          0.000000             0.017802                 0.016136   
-         1          0.000000             0.013602                 0.004440   
-         2          0.009412             0.045813                 0.032457   
-         3          0.020263             0.014640                 0.019610   
-         4          0.000000             0.094616                 0.011947   
-         
-            speed\_before\_mean  steering\_before\_mean  brake\_before\_mean  \textbackslash{}
-         0           6.614995              0.517642           1.000000   
-         1          12.405217              0.481101           1.000000   
-         2           9.719554              0.496611           0.969863   
-         3           3.134071              0.525620           0.956432   
-         4          15.771787              0.492397           1.000000   
-         
-            throttle\_before\_mean  acceleration\_before\_mean      total\_time  
-         0              0.863178                  0.038096 00:00:10.091857  
-         1              0.772151                  0.054448 00:00:03.673778  
-         2              0.788247                  0.013562 00:01:34.469000  
-         3              0.933556                  0.000010 00:00:13.052240  
-         4              0.310690                  0.178377 00:00:02.488626  
-\end{Verbatim}
-            
-    \subsection{When pedestrian is
-running}\label{when-pedestrian-is-running}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}73}]:} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brakeDiff}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brake}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{p}{)}
-         \PY{n}{pedCross} \PY{o}{=} \PY{n}{df\PYZus{}joined}\PY{p}{[}\PY{p}{(}\PY{n}{df\PYZus{}joined}\PY{o}{.}\PY{n}{nextPedRunning} \PY{o}{==} \PY{k+kc}{True}\PY{p}{)}\PY{p}{]}
-         \PY{n}{dfNew} \PY{o}{=} \PY{n}{pedCross}\PY{p}{[}\PY{p}{(}\PY{n}{pedCross}\PY{o}{.}\PY{n}{session\PYZus{}id} \PY{o}{==} \PY{l+m+mf}{175.0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{pedCross}\PY{o}{.}\PY{n}{scenario} \PY{o}{==} \PY{l+m+mf}{6.0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{pedCross}\PY{o}{.}\PY{n}{pedId} \PY{o}{==} \PY{l+m+mf}{1.0}\PY{p}{)}\PY{p}{]}
-         \PY{n}{dfNew}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brakeDiff}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{p}{)}
-         \PY{n}{dfNew}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{brake}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}73}]:} <matplotlib.axes.\_subplots.AxesSubplot at 0x10b6e8390>
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_34_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \subsubsection{Break Reaction Time}\label{break-reaction-time}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}74}]:} \PY{n}{startReactionBrake} \PY{o}{=} \PY{n}{pedCross}
-         \PY{n}{finishReactionBrake} \PY{o}{=} \PY{n}{pedCross}\PY{p}{[}\PY{p}{(}\PY{n}{pedCross}\PY{o}{.}\PY{n}{brakeDiff} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{]}
-         \PY{n}{finishReactionBrake}\PY{o}{.}\PY{n}{shape}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}74}]:} (6536, 19)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}75}]:} \PY{n}{firstRowPedCross} \PY{o}{=} \PY{n}{startReactionBrake}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{first}\PY{p}{(}\PY{p}{)}
-         \PY{n}{firstRowPressBrake} \PY{o}{=} \PY{n}{finishReactionBrake}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{as\PYZus{}index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{first}\PY{p}{(}\PY{p}{)}
-         \PY{n}{firstRowPressBrake}\PY{o}{.}\PY{n}{shape}
-         \PY{n}{firstRowPedCross}\PY{o}{.}\PY{n}{shape}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}75}]:} (655, 19)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}76}]:} \PY{n}{reactionBrake} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{firstRowPedCross}\PY{p}{,} \PY{n}{firstRowPressBrake}\PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{suffixes}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}init}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}fin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
-         \PY{n}{reactionBrake}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}76}]:}    session\_id  scenario  pedId                   time\_init  Pos\_X\_init  \textbackslash{}
-         0       144.0       1.0    1.0  2017-10-04 12:50:38.549538 -909.306458   
-         1       144.0       1.0    3.0  2017-10-04 12:50:47.530114 -839.965700   
-         2       144.0       1.0   15.0  2017-10-04 12:52:29.782335  -62.199753   
-         3       144.0       2.0    0.0  2017-10-04 12:57:42.500777 -933.749300   
-         4       144.0       2.0    2.0  2017-10-04 12:57:46.323453 -885.836365   
-         
-            Pos\_Y\_init  hadCollision\_init  nextPedRunning\_init  distancePed\_init  \textbackslash{}
-         0   80.473330                0.0                  1.0         23.562530   
-         1   83.164460                0.0                  1.0         39.895280   
-         2   40.680523                0.0                  1.0         49.374313   
-         3   84.487495                0.0                  1.0          7.474411   
-         4   77.199104                0.0                  1.0         49.291360   
-         
-            speed\_init      {\ldots}       speed\_fin  posPedX\_fin  posPedY\_fin  \textbackslash{}
-         0    7.754880      {\ldots}        8.946986  -885.665649    72.027790   
-         1   13.472353      {\ldots}       13.034663  -801.989441    93.251990   
-         2   25.585112      {\ldots}       25.720684   -20.775450    15.126913   
-         3    2.517837      {\ldots}             NaN          NaN          NaN   
-         4   19.412086      {\ldots}       19.944923  -836.171631    80.316110   
-         
-           currentDistance\_fin                  time.1\_fin  steering\_fin  brake\_fin  \textbackslash{}
-         0          1178.73486  2017-10-04 12:50:39.586297      0.477104   0.980163   
-         1          1094.34827  2017-10-04 12:50:49.648762      0.533089   0.980163   
-         2           355.46260  2017-10-04 12:52:29.893130      0.504952   0.900801   
-         3                 NaN                         NaN           NaN        NaN   
-         4          1141.20886  2017-10-04 12:57:47.485545      0.480339   0.964294   
-         
-            throttle\_fin  acceleration\_fin brakeDiff\_fin  
-         0      0.948409          0.072344     -0.019837  
-         1      0.948409         -0.009284     -0.019837  
-         2      0.445304          0.069757     -0.099199  
-         3           NaN               NaN           NaN  
-         4      0.932540         -0.081133     -0.035706  
-         
-         [5 rows x 35 columns]
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}77}]:} \PY{n}{reactionPressBrake} \PY{o}{=} \PY{n}{firstRowPedCross}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{speed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-         \PY{n}{reactionPressBrake}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{reaction\PYZus{}time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{reactionBrake}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time\PYZus{}fin}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{pd}\PY{o}{.}\PY{n}{to\PYZus{}datetime}\PY{p}{(}\PY{n}{reactionBrake}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{time\PYZus{}init}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
-         \PY{n}{reactionPressBrake}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}77}]:}    session\_id  scenario  pedId      speed   reaction\_time
-         0       144.0       1.0    1.0   7.754880 00:00:01.048791
-         1       144.0       1.0    3.0  13.472353 00:00:02.106615
-         2       144.0       1.0   15.0  25.585112 00:00:00.079211
-         3       144.0       2.0    0.0   2.517837             NaT
-         4       144.0       2.0    2.0  19.412086 00:00:01.161592
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}78}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Initial Reaction Speed}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Reaction Time Brake}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{reactionPressBrake} \PY{o}{=} \PY{n}{reactionPressBrake}\PY{p}{[}\PY{n}{reactionPressBrake}\PY{o}{.}\PY{n}{reaction\PYZus{}time}\PY{o}{.}\PY{n}{dt}\PY{o}{.}\PY{n}{total\PYZus{}seconds}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZlt{}} \PY{l+m+mi}{50}\PY{p}{]}
-         
-         \PY{n}{noHits} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{scatter}\PY{p}{(}\PY{n}{reactionPressBrake}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{speed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{reactionPressBrake}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{reaction\PYZus{}time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{dt}\PY{o}{.}\PY{n}{total\PYZus{}seconds}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         
-         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{k+kc}{True}\PY{p}{)}
-         
-         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \section{Merge dataframes}\label{merge-dataframes}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}79}]:} \PY{n}{df\PYZus{}suffix} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{merge}\PY{p}{(}\PY{n}{means\PYZus{}cleaned}\PY{p}{,} \PY{n}{variance\PYZus{}cleaned}\PY{p}{,} \PY{n}{on}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{how}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{left}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{suffixes}\PY{o}{=}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZus{}var}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{}df\PYZus{}suffix = pd.merge(df\PYZus{}suffix, total\PYZus{}time, on=[\PYZsq{}session\PYZus{}id\PYZsq{},\PYZsq{}scenario\PYZsq{},\PYZsq{}pedId\PYZsq{}],how=\PYZsq{}left\PYZsq{})}
-         \PY{c+c1}{\PYZsh{}df\PYZus{}suffix = pd.merge(df\PYZus{}suffix, initial\PYZus{}distance, on=[\PYZsq{}session\PYZus{}id\PYZsq{},\PYZsq{}scenario\PYZsq{},\PYZsq{}pedId\PYZsq{}],how=\PYZsq{}left\PYZsq{})}
-         \PY{n}{df\PYZus{}suffix}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}79}]:}    session\_id  scenario  pedId  hadCollision  speed\_mean  steering\_mean  \textbackslash{}
-         0       144.0       1.0    1.0      0.000000    5.919151       0.503649   
-         1       144.0       1.0    3.0      0.000000    7.580378       0.499771   
-         2       144.0       1.0   15.0      0.008366    9.474048       0.494557   
-         3       144.0       2.0    0.0      0.000000    3.398595       0.523305   
-         4       144.0       2.0    2.0      0.000000   11.669419       0.500661   
-         
-            brake\_mean  throttle\_mean  acceleration\_mean  speed\_var  steering\_var  \textbackslash{}
-         0    0.965743       0.820576           0.030731  13.796202      0.000655   
-         1    0.891302       0.878839          -0.026652  31.451253      0.000345   
-         2    0.952182       0.781126           0.006292  53.873833      0.001231   
-         3    0.960227       0.858795           0.027363   5.036717      0.000101   
-         4    0.891913       0.522365           0.008028  47.209285      0.000396   
-         
-            brake\_var  throttle\_var  acceleration\_var  
-         0   0.014468      0.028719          0.039370  
-         1   0.058767      0.010391          0.063480  
-         2   0.022506      0.045416          0.106281  
-         3   0.018643      0.075860          0.027735  
-         4   0.055982      0.112551          0.159198  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}80}]:} \PY{k}{def} \PY{n+nf}{delete\PYZus{}common\PYZus{}columns}\PY{p}{(}\PY{n}{df}\PY{p}{)}\PY{p}{:}
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{session\PYZus{}id}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{scenario}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-             \PY{n}{df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pedId}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{inplace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{errors}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ignore}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} 
-         
-         \PY{n}{delete\PYZus{}common\PYZus{}columns}\PY{p}{(}\PY{n}{df\PYZus{}suffix}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}81}]:} \PY{n}{df\PYZus{}suffix}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{values}\PY{o}{.}\PY{n}{any}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}81}]:} False
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}82}]:} \PY{n}{df\PYZus{}suffix}\PY{o}{.}\PY{n}{shape}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}82}]:} (655, 11)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}83}]:} \PY{k}{def} \PY{n+nf}{plot\PYZus{}corr}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m+mi}{11}\PY{p}{)}\PY{p}{:}
-             \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{}}
-         \PY{l+s+sd}{    Function plots a graphical correlation matrix for each pair of columns in the dataframe.}
-         
-         \PY{l+s+sd}{    Input:}
-         \PY{l+s+sd}{        df: pandas DataFrame}
-         \PY{l+s+sd}{        size: vertical and horizontal size of the plot}
-         
-         \PY{l+s+sd}{    Displays:}
-         \PY{l+s+sd}{        matrix of correlation between columns.  Blue\PYZhy{}cyan\PYZhy{}yellow\PYZhy{}red\PYZhy{}darkred =\PYZgt{} less to more correlated}
-         \PY{l+s+sd}{                                                0 \PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZhy{}\PYZgt{}  1}
-         \PY{l+s+sd}{                                                Expect a darkred line running from top left to bottom right}
-         \PY{l+s+sd}{    \PYZdq{}\PYZdq{}\PYZdq{}}
-         
-             \PY{n}{corr} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}    \PY{c+c1}{\PYZsh{} data frame correlation function}
-             \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{n}{size}\PY{p}{,} \PY{n}{size}\PY{p}{)}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{matshow}\PY{p}{(}\PY{n}{corr}\PY{p}{)}   \PY{c+c1}{\PYZsh{} color code the rectangles by correlation value}
-             \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{corr}\PY{o}{.}\PY{n}{columns}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{corr}\PY{o}{.}\PY{n}{columns}\PY{p}{)}  \PY{c+c1}{\PYZsh{} draw x tick marks}
-             \PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{corr}\PY{o}{.}\PY{n}{columns}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{corr}\PY{o}{.}\PY{n}{columns}\PY{p}{)}  \PY{c+c1}{\PYZsh{} draw y tick marks}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}85}]:} \PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
-         
-         \PY{n}{corrmat} \PY{o}{=} \PY{n}{df\PYZus{}suffix}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}
-         \PY{n}{f}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{11}\PY{p}{,}\PY{l+m+mi}{11}\PY{p}{)}\PY{p}{)}
-         \PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{n}{font\PYZus{}scale}\PY{o}{=}\PY{l+m+mf}{0.9}\PY{p}{)}
-         \PY{n}{sns}\PY{o}{.}\PY{n}{heatmap}\PY{p}{(}\PY{n}{corrmat}\PY{p}{,} \PY{n}{vmax}\PY{o}{=}\PY{o}{.}\PY{l+m+mi}{8}\PY{p}{,} \PY{n}{square}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{annot}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{fmt}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{.2f}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{winter}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_47_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}86}]:} \PY{n}{df\PYZus{}suffix}\PY{o}{.}\PY{n}{corr}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}86}]:}                    hadCollision  speed\_mean  steering\_mean  brake\_mean  \textbackslash{}
-         hadCollision           1.000000    0.003023       0.037162   -0.103735   
-         speed\_mean             0.003023    1.000000      -0.073901    0.057452   
-         steering\_mean          0.037162   -0.073901       1.000000    0.073249   
-         brake\_mean            -0.103735    0.057452       0.073249    1.000000   
-         throttle\_mean          0.000472   -0.691672       0.129062    0.083151   
-         acceleration\_mean      0.011156    0.320063       0.052155    0.111709   
-         speed\_var              0.212230    0.236173      -0.036002   -0.464997   
-         steering\_var           0.147238    0.001821      -0.178203   -0.039894   
-         brake\_var              0.143651    0.038165      -0.075838   -0.731555   
-         throttle\_var           0.113680    0.382434      -0.047182   -0.239204   
-         acceleration\_var      -0.025400   -0.258142      -0.022899   -0.085719   
-         
-                            throttle\_mean  acceleration\_mean  speed\_var  steering\_var  \textbackslash{}
-         hadCollision            0.000472           0.011156   0.212230      0.147238   
-         speed\_mean             -0.691672           0.320063   0.236173      0.001821   
-         steering\_mean           0.129062           0.052155  -0.036002     -0.178203   
-         brake\_mean              0.083151           0.111709  -0.464997     -0.039894   
-         throttle\_mean           1.000000          -0.262172  -0.339819     -0.039581   
-         acceleration\_mean      -0.262172           1.000000   0.116663      0.044029   
-         speed\_var              -0.339819           0.116663   1.000000      0.088946   
-         steering\_var           -0.039581           0.044029   0.088946      1.000000   
-         brake\_var              -0.197457           0.047181   0.556514      0.045281   
-         throttle\_var           -0.620655           0.128485   0.490132      0.105340   
-         acceleration\_var        0.160891          -0.932188  -0.118702     -0.036567   
-         
-                            brake\_var  throttle\_var  acceleration\_var  
-         hadCollision        0.143651      0.113680         -0.025400  
-         speed\_mean          0.038165      0.382434         -0.258142  
-         steering\_mean      -0.075838     -0.047182         -0.022899  
-         brake\_mean         -0.731555     -0.239204         -0.085719  
-         throttle\_mean      -0.197457     -0.620655          0.160891  
-         acceleration\_mean   0.047181      0.128485         -0.932188  
-         speed\_var           0.556514      0.490132         -0.118702  
-         steering\_var        0.045281      0.105340         -0.036567  
-         brake\_var           1.000000      0.318190         -0.072101  
-         throttle\_var        0.318190      1.000000         -0.082509  
-         acceleration\_var   -0.072101     -0.082509          1.000000  
-\end{Verbatim}
-            
-    \subsection{Mold Data}\label{mold-data}
-
-    \subsubsection{Data Types}\label{data-types}
-
-Inspect data types to see if there are any issues. Data should be
-numeric.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}87}]:} \PY{n}{df} \PY{o}{=} \PY{n}{df\PYZus{}suffix}
-         \PY{c+c1}{\PYZsh{}hadCollision\PYZus{}map = \PYZob{}True : 1, False : 0\PYZcb{}}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}88}]:} \PY{n}{cols\PYZus{}at\PYZus{}end} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{df} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{n}{c} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{df} \PY{k}{if} \PY{n}{c} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{cols\PYZus{}at\PYZus{}end}\PY{p}{]} 
-                 \PY{o}{+} \PY{p}{[}\PY{n}{c} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{cols\PYZus{}at\PYZus{}end} \PY{k}{if} \PY{n}{c} \PY{o+ow}{in} \PY{n}{df}\PY{p}{]}\PY{p}{]}
-         \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}88}]:}    speed\_mean  steering\_mean  brake\_mean  throttle\_mean  acceleration\_mean  \textbackslash{}
-         0    5.919151       0.503649    0.965743       0.820576           0.030731   
-         1    7.580378       0.499771    0.891302       0.878839          -0.026652   
-         2    9.474048       0.494557    0.952182       0.781126           0.006292   
-         3    3.398595       0.523305    0.960227       0.858795           0.027363   
-         4   11.669419       0.500661    0.891913       0.522365           0.008028   
-         
-            speed\_var  steering\_var  brake\_var  throttle\_var  acceleration\_var  \textbackslash{}
-         0  13.796202      0.000655   0.014468      0.028719          0.039370   
-         1  31.451253      0.000345   0.058767      0.010391          0.063480   
-         2  53.873833      0.001231   0.022506      0.045416          0.106281   
-         3   5.036717      0.000101   0.018643      0.075860          0.027735   
-         4  47.209285      0.000396   0.055982      0.112551          0.159198   
-         
-            hadCollision  
-         0             0  
-         1             0  
-         2             1  
-         3             0  
-         4             0  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}89}]:} \PY{n}{num\PYZus{}obs} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{p}{)}
-         \PY{n}{num\PYZus{}true} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
-         \PY{n}{num\PYZus{}false} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of True cases:  }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:2.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{num\PYZus{}true}\PY{p}{,} \PY{p}{(}\PY{n}{num\PYZus{}true}\PY{o}{/}\PY{n}{num\PYZus{}obs}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Number of False cases: }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:2.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{num\PYZus{}false}\PY{p}{,} \PY{p}{(}\PY{n}{num\PYZus{}false}\PY{o}{/}\PY{n}{num\PYZus{}obs}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Number of True cases:  61 (9.31\%)
-Number of False cases: 594 (90.69\%)
-
-    \end{Verbatim}
-
-    \subsubsection{Spliting the data}\label{spliting-the-data}
-
-70\% for training, 30\% for testing
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}129}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
-          
-          \PY{n}{predicted\PYZus{}column} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-          
-          \PY{n}{feature\PYZus{}col\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{n}{c} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{df} \PY{k}{if} \PY{n}{c} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{predicted\PYZus{}column}\PY{p}{]}
-          \PY{n}{predicted\PYZus{}class\PYZus{}names} \PY{o}{=} \PY{n}{predicted\PYZus{}column}
-          
-          \PY{n}{X} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{feature\PYZus{}col\PYZus{}names}\PY{p}{]}\PY{o}{.}\PY{n}{values}     \PY{c+c1}{\PYZsh{} predictor feature columns (10 X m)}
-          \PY{n}{y} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{predicted\PYZus{}class\PYZus{}names}\PY{p}{]}\PY{o}{.}\PY{n}{values} \PY{c+c1}{\PYZsh{} predicted class (1=true, 0=false) column (1 X m)}
-          \PY{n}{split\PYZus{}test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.30}
-          
-          \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{n}{split\PYZus{}test\PYZus{}size}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)} 
-                                      \PY{c+c1}{\PYZsh{} test\PYZus{}size = 0.3 is 30\PYZpc{}, 42 is the answer to everything}
-\end{Verbatim}
-
-
-    We check to ensure we have the the desired 70\% train, 30\% test split
-of the data
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}130}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}0:0.2f\PYZcb{}}\PY{l+s+si}{\PYZpc{} i}\PY{l+s+s2}{n training set}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}0:0.2f\PYZcb{}}\PY{l+s+si}{\PYZpc{} i}\PY{l+s+s2}{n test set}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-69.92\% in training set
-30.08\% in test set
-
-    \end{Verbatim}
-
-    \paragraph{Verifying predicted value was split
-correctly}\label{verifying-predicted-value-was-split-correctly}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}131}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Original True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Original False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test True      : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test False     : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Original True  : 61 (9.31\%)
-Original False : 594 (90.69\%)
-
-Training True  : 48 (10.48\%)
-Training False : 410 (89.52\%)
-
-Test True      : 13 (6.60\%)
-Test False     : 184 (93.40\%)
-
-    \end{Verbatim}
-
-    \subsubsection{Post-split Data
-Preparation}\label{post-split-data-preparation}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}132}]:} \PY{n}{df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}132}]:}    speed\_mean  steering\_mean  brake\_mean  throttle\_mean  acceleration\_mean  \textbackslash{}
-          0    5.919151       0.503649    0.965743       0.820576           0.030731   
-          1    7.580378       0.499771    0.891302       0.878839          -0.026652   
-          2    9.474048       0.494557    0.952182       0.781126           0.006292   
-          3    3.398595       0.523305    0.960227       0.858795           0.027363   
-          4   11.669419       0.500661    0.891913       0.522365           0.008028   
-          
-             speed\_var  steering\_var  brake\_var  throttle\_var  acceleration\_var  \textbackslash{}
-          0  13.796202      0.000655   0.014468      0.028719          0.039370   
-          1  31.451253      0.000345   0.058767      0.010391          0.063480   
-          2  53.873833      0.001231   0.022506      0.045416          0.106281   
-          3   5.036717      0.000101   0.018643      0.075860          0.027735   
-          4  47.209285      0.000396   0.055982      0.112551          0.159198   
-          
-             hadCollision  
-          0             0  
-          1             0  
-          2             1  
-          3             0  
-          4             0  
-\end{Verbatim}
-            
-    \section{Training Initial Algorithm}\label{training-initial-algorithm}
-
-    \subsection{Naive Bayes}\label{naive-bayes}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}133}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{naive\PYZus{}bayes} \PY{k}{import} \PY{n}{GaussianNB}
-          
-          \PY{c+c1}{\PYZsh{} create Gaussian Naive Bayes model object and train it with the data}
-          \PY{n}{nb\PYZus{}model} \PY{o}{=} \PY{n}{GaussianNB}\PY{p}{(}\PY{p}{)}
-          
-          \PY{n}{nb\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}133}]:} GaussianNB(priors=None)
-\end{Verbatim}
-            
-    \subsubsection{Performance on Training
-Data}\label{performance-on-training-data}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}134}]:} \PY{c+c1}{\PYZsh{} predict values using the training data}
-          \PY{n}{nb\PYZus{}predict\PYZus{}train} \PY{o}{=} \PY{n}{nb\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{} import the performance metrics library}
-          \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{metrics}
-          
-          \PY{c+c1}{\PYZsh{} Accuracy}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{nb\PYZus{}predict\PYZus{}train}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.7358
-
-
-    \end{Verbatim}
-
-    \subsubsection{Performance on Testing
-Data}\label{performance-on-testing-data}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}135}]:} \PY{c+c1}{\PYZsh{} predict values using the testing data}
-          \PY{n}{nb\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{nb\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-          
-          \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{metrics}
-          
-          \PY{c+c1}{\PYZsh{} training metrics}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nb\PYZus{}predict\PYZus{}test}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{nb\PYZus{}predict\PYZus{}test}\PY{p}{)}
-          \PY{c+c1}{\PYZsh{}print (\PYZdq{}y\PYZus{}test\PYZdq{}, y\PYZus{}test)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{nb\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-nb\_predict\_test [0 0 0 0 0 0 1 1 1 0 1 0 0 1 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
- 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 1
- 0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 0 1 0
- 0 0 0 1 0 1 0 0 0 1 1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0 1 0 0 0 0 0
- 1 1 0 0 0 0 0 1 0 0 1 0 1 1 0 1 1 0 0 0 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1
- 0 0 0 1 0 1 0 0 0 0 0 0]
-Accuracy: 0.7614
-
-    \end{Verbatim}
-
-    \paragraph{Metrics}\label{metrics}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}97}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Confusion Matrix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{nb\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}51}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{n}{y\PYZus{}train}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{nb\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test True      : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Test False     : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{n}{y\PYZus{}test}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Confusion Matrix
-[[143  41]
- [  6   7]]
+Training True  : 32 (9.55\%)
+Training False : 303 (90.45\%)
 
-Classification Report
-             precision    recall  f1-score   support
-
-          0       0.96      0.78      0.86       184
-          1       0.15      0.54      0.23        13
-
-avg / total       0.91      0.76      0.82       197
-
+Test True      : 22 (9.82\%)
+Test False     : 202 (90.18\%)
 
     \end{Verbatim}
 
-    \subsection{Random Forest}\label{random-forest}
+    \section{Over sampling data}\label{over-sampling-data}
+
+    \subsection{Random Over Sampler}\label{random-over-sampler}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}98}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestClassifier}
-         \PY{n}{rf\PYZus{}model} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{)}      \PY{c+c1}{\PYZsh{} Create random forest object}
-         \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}52}]:} \PY{k+kn}{from} \PY{n+nn}{imblearn}\PY{n+nn}{.}\PY{n+nn}{over\PYZus{}sampling} \PY{k}{import} \PY{n}{RandomOverSampler}
+         \PY{n}{ros} \PY{o}{=} \PY{n}{RandomOverSampler}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled} \PY{o}{=} \PY{n}{ros}\PY{o}{.}\PY{n}{fit\PYZus{}sample}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Training True  : 303 (50.00\%)
+Training False : 303 (50.00\%)
+
+    \end{Verbatim}
+
+    \subsection{Random forest}\label{random-forest}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}59}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestClassifier}
+         \PY{n}{rf\PYZus{}model} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{\PYZcb{}}\PY{p}{)}      \PY{c+c1}{\PYZsh{} Create random forest object}
+         \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}98}]:} RandomForestClassifier(bootstrap=True, class\_weight=None, criterion='gini',
-                     max\_depth=None, max\_features='auto', max\_leaf\_nodes=None,
-                     min\_impurity\_decrease=0.0, min\_impurity\_split=None,
-                     min\_samples\_leaf=1, min\_samples\_split=2,
-                     min\_weight\_fraction\_leaf=0.0, n\_estimators=10, n\_jobs=1,
-                     oob\_score=False, random\_state=42, verbose=0, warm\_start=False)
+{\color{outcolor}Out[{\color{outcolor}59}]:} RandomForestClassifier(bootstrap=True, class\_weight=\{0: 10, 1: 1\},
+                     criterion='gini', max\_depth=None, max\_features='auto',
+                     max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+                     min\_impurity\_split=None, min\_samples\_leaf=1,
+                     min\_samples\_split=2, min\_weight\_fraction\_leaf=0.0,
+                     n\_estimators=10, n\_jobs=1, oob\_score=False, random\_state=42,
+                     verbose=0, warm\_start=False)
 \end{Verbatim}
             
-    \subsubsection{Predict Training Data}\label{predict-training-data}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}99}]:} \PY{n}{rf\PYZus{}predict\PYZus{}train} \PY{o}{=} \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{)}
-         \PY{c+c1}{\PYZsh{} training metrics}
-         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}train}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.9803
-
-    \end{Verbatim}
-
     \subsubsection{Predict Test Data}\label{predict-test-data}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}100}]:} \PY{n}{rf\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{} training metrics}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}60}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{metrics}
+         
+         \PY{n}{rf\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} training metrics}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.9391
+Accuracy: 0.9286
 
     \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}101}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{}\PYZsh{} TN  FP}
-          \PY{c+c1}{\PYZsh{}\PYZsh{} FN  TP}
+{\color{incolor}In [{\color{incolor}61}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-[[184   0]
- [ 12   1]]
+[[196   6]
+ [ 10  12]]
 
 Classification Report
              precision    recall  f1-score   support
 
-          0       0.94      1.00      0.97       184
-          1       1.00      0.08      0.14        13
+          0       0.95      0.97      0.96       202
+          1       0.67      0.55      0.60        22
 
-avg / total       0.94      0.94      0.91       197
+avg / total       0.92      0.93      0.93       224
 
 
     \end{Verbatim}
 
-    \subsection{Logistic Regression}\label{logistic-regression}
+    \subsection{SMOT}\label{smot}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}102}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
-          
-          \PY{c+c1}{\PYZsh{}lr\PYZus{}model =LogisticRegression(C=0.7, random\PYZus{}state=42, solver=\PYZsq{}liblinear\PYZsq{}, max\PYZus{}iter=10000)}
-          \PY{n}{lr\PYZus{}model} \PY{o}{=}\PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{C}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)}
-          \PY{n}{lr\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-          \PY{n}{lr\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{} training metrics}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}62}]:} \PY{k+kn}{from} \PY{n+nn}{imblearn}\PY{n+nn}{.}\PY{n+nn}{over\PYZus{}sampling} \PY{k}{import} \PY{n}{SMOTE}\PY{p}{,} \PY{n}{ADASYN}
+         \PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled} \PY{o}{=} \PY{n}{SMOTE}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}sample}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.9391
-[[183   1]
- [ 11   2]]
+Training True  : 303 (50.00\%)
+Training False : 303 (50.00\%)
+
+    \end{Verbatim}
+
+    \subsection{Random forest}\label{random-forest}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} \PY{n}{rf\PYZus{}model} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{\PYZcb{}}\PY{p}{)}      \PY{c+c1}{\PYZsh{} Create random forest object}
+         \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}63}]:} RandomForestClassifier(bootstrap=True, class\_weight=\{0: 10, 1: 1\},
+                     criterion='gini', max\_depth=None, max\_features='auto',
+                     max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+                     min\_impurity\_split=None, min\_samples\_leaf=1,
+                     min\_samples\_split=2, min\_weight\_fraction\_leaf=0.0,
+                     n\_estimators=10, n\_jobs=1, oob\_score=False, random\_state=42,
+                     verbose=0, warm\_start=False)
+\end{Verbatim}
+            
+    \subsubsection{Predict Test Data}\label{predict-test-data}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}64}]:} \PY{n}{rf\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} training metrics}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Accuracy: 0.8973
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}65}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[[187  15]
+ [  8  14]]
 
 Classification Report
              precision    recall  f1-score   support
 
-          0       0.94      0.99      0.97       184
-          1       0.67      0.15      0.25        13
+          0       0.96      0.93      0.94       202
+          1       0.48      0.64      0.55        22
 
-avg / total       0.93      0.94      0.92       197
+avg / total       0.91      0.90      0.90       224
 
 
     \end{Verbatim}
 
+    \subsection{ADASYN}\label{adasyn}
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}103}]:} \PY{n}{C\PYZus{}start} \PY{o}{=} \PY{l+m+mf}{0.1}
-          \PY{n}{C\PYZus{}end} \PY{o}{=} \PY{l+m+mi}{5}
-          \PY{n}{C\PYZus{}inc} \PY{o}{=} \PY{l+m+mf}{0.1}
-          
-          \PY{n}{C\PYZus{}values}\PY{p}{,} \PY{n}{recall\PYZus{}scores} \PY{o}{=} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{p}{]}
-          
-          \PY{n}{C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}start}
-          \PY{n}{best\PYZus{}recall\PYZus{}score} \PY{o}{=} \PY{l+m+mi}{0}
-          \PY{k}{while} \PY{p}{(}\PY{n}{C\PYZus{}val} \PY{o}{\PYZlt{}} \PY{n}{C\PYZus{}end}\PY{p}{)}\PY{p}{:}
-              \PY{n}{C\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{C\PYZus{}val}\PY{p}{)}
-              \PY{n}{lr\PYZus{}model\PYZus{}loop} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{C}\PY{o}{=}\PY{n}{C\PYZus{}val}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{solver}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{liblinear}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-              \PY{n}{lr\PYZus{}model\PYZus{}loop}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-              \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}model\PYZus{}loop}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-              \PY{n}{recall\PYZus{}score} \PY{o}{=} \PY{n}{metrics}\PY{o}{.}\PY{n}{recall\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test}\PY{p}{)}
-              \PY{n}{recall\PYZus{}scores}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{recall\PYZus{}score}\PY{p}{)}
-              \PY{k}{if} \PY{p}{(}\PY{n}{recall\PYZus{}score} \PY{o}{\PYZgt{}} \PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{)}\PY{p}{:}
-                  \PY{n}{best\PYZus{}recall\PYZus{}score} \PY{o}{=} \PY{n}{recall\PYZus{}score}
-                  \PY{n}{best\PYZus{}lr\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test}
-                  
-              \PY{n}{C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}val} \PY{o}{+} \PY{n}{C\PYZus{}inc}
-          
-          \PY{n}{best\PYZus{}score\PYZus{}C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}values}\PY{p}{[}\PY{n}{recall\PYZus{}scores}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{)}\PY{p}{]}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1st max value of }\PY{l+s+si}{\PYZob{}0:.3f\PYZcb{}}\PY{l+s+s2}{ occured at C=}\PY{l+s+si}{\PYZob{}1:.3f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{,} \PY{n}{best\PYZus{}score\PYZus{}C\PYZus{}val}\PY{p}{)}\PY{p}{)}
-          
-          \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline 
-          \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{C\PYZus{}values}\PY{p}{,} \PY{n}{recall\PYZus{}scores}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{C value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{recall score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}66}]:} \PY{k+kn}{from} \PY{n+nn}{imblearn}\PY{n+nn}{.}\PY{n+nn}{over\PYZus{}sampling} \PY{k}{import} \PY{n}{SMOTE}\PY{p}{,} \PY{n}{ADASYN}
+         
+         \PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled} \PY{o}{=} \PY{n}{ADASYN}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit\PYZus{}sample}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training True  : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training False : }\PY{l+s+si}{\PYZob{}0\PYZcb{}}\PY{l+s+s2}{ (}\PY{l+s+si}{\PYZob{}1:0.2f\PYZcb{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{)}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{n}{y\PYZus{}resampled}\PY{p}{[}\PY{p}{:}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{y\PYZus{}resampled}\PY{p}{)} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-1st max value of 0.154 occured at C=0.100
+Training True  : 314 (50.89\%)
+Training False : 303 (49.11\%)
 
     \end{Verbatim}
+
+    \subsection{Random forest}\label{random-forest}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{rf\PYZus{}model} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{:}\PY{l+m+mi}{1}\PY{p}{\PYZcb{}}\PY{p}{)}      \PY{c+c1}{\PYZsh{} Create random forest object}
+         \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}resampled}\PY{p}{,} \PY{n}{y\PYZus{}resampled}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}103}]:} Text(0,0.5,'recall score')
+{\color{outcolor}Out[{\color{outcolor}67}]:} RandomForestClassifier(bootstrap=True, class\_weight=\{0: 10, 1: 1\},
+                     criterion='gini', max\_depth=None, max\_features='auto',
+                     max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+                     min\_impurity\_split=None, min\_samples\_leaf=1,
+                     min\_samples\_split=2, min\_weight\_fraction\_leaf=0.0,
+                     n\_estimators=10, n\_jobs=1, oob\_score=False, random\_state=42,
+                     verbose=0, warm\_start=False)
 \end{Verbatim}
             
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_80_2.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \subsubsection{Logisitic regression with
-class\_weight='balanced'}\label{logisitic-regression-with-class_weightbalanced}
+    \subsubsection{Predict Test Data}\label{predict-test-data}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}104}]:} \PY{n}{C\PYZus{}start} \PY{o}{=} \PY{l+m+mf}{0.1}
-          \PY{n}{C\PYZus{}end} \PY{o}{=} \PY{l+m+mi}{5}
-          \PY{n}{C\PYZus{}inc} \PY{o}{=} \PY{l+m+mf}{0.1}
-          
-          \PY{n}{C\PYZus{}values}\PY{p}{,} \PY{n}{recall\PYZus{}scores} \PY{o}{=} \PY{p}{[}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{p}{]}
-          
-          \PY{n}{C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}start}
-          \PY{n}{best\PYZus{}recall\PYZus{}score} \PY{o}{=} \PY{l+m+mi}{0}
-          \PY{k}{while} \PY{p}{(}\PY{n}{C\PYZus{}val} \PY{o}{\PYZlt{}} \PY{n}{C\PYZus{}end}\PY{p}{)}\PY{p}{:}
-              \PY{n}{C\PYZus{}values}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{C\PYZus{}val}\PY{p}{)}
-              \PY{n}{lr\PYZus{}model\PYZus{}loop} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{C}\PY{o}{=}\PY{n}{C\PYZus{}val}\PY{p}{,} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{balanced}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{solver}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{liblinear}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{max\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{10000}\PY{p}{)}
-              \PY{n}{lr\PYZus{}model\PYZus{}loop}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-              \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}model\PYZus{}loop}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-              \PY{n}{recall\PYZus{}score} \PY{o}{=} \PY{n}{metrics}\PY{o}{.}\PY{n}{recall\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test}\PY{p}{)}
-              \PY{n}{recall\PYZus{}scores}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{recall\PYZus{}score}\PY{p}{)}
-              \PY{k}{if} \PY{p}{(}\PY{n}{recall\PYZus{}score} \PY{o}{\PYZgt{}} \PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{)}\PY{p}{:}
-                  \PY{n}{best\PYZus{}recall\PYZus{}score} \PY{o}{=} \PY{n}{recall\PYZus{}score}
-                  \PY{n}{best\PYZus{}lr\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}predict\PYZus{}loop\PYZus{}test}
-                  
-              \PY{n}{C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}val} \PY{o}{+} \PY{n}{C\PYZus{}inc}
-          
-          \PY{n}{best\PYZus{}score\PYZus{}C\PYZus{}val} \PY{o}{=} \PY{n}{C\PYZus{}values}\PY{p}{[}\PY{n}{recall\PYZus{}scores}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{)}\PY{p}{]}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1st max value of }\PY{l+s+si}{\PYZob{}0:.3f\PYZcb{}}\PY{l+s+s2}{ occured at C=}\PY{l+s+si}{\PYZob{}1:.3f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{best\PYZus{}recall\PYZus{}score}\PY{p}{,} \PY{n}{best\PYZus{}score\PYZus{}C\PYZus{}val}\PY{p}{)}\PY{p}{)}
-          
-          \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline 
-          \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{C\PYZus{}values}\PY{p}{,} \PY{n}{recall\PYZus{}scores}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{C value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{recall score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}68}]:} \PY{n}{rf\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{rf\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} training metrics}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-1st max value of 0.615 occured at C=0.900
+Accuracy: 0.8125
 
     \end{Verbatim}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}104}]:} Text(0,0.5,'recall score')
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_82_2.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}105}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
-          \PY{n}{lr\PYZus{}model} \PY{o}{=}\PY{n}{LogisticRegression}\PY{p}{(} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{balanced}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{C}\PY{o}{=}\PY{n}{best\PYZus{}score\PYZus{}C\PYZus{}val}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{solver}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{liblinear}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-          \PY{n}{lr\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-          \PY{n}{lr\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{} training metrics}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{recall\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}69}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{rf\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.5838
-[[107  77]
- [  5   8]]
+[[161  41]
+ [  1  21]]
 
 Classification Report
              precision    recall  f1-score   support
 
-          0       0.96      0.58      0.72       184
-          1       0.09      0.62      0.16        13
+          0       0.99      0.80      0.88       202
+          1       0.34      0.95      0.50        22
 
-avg / total       0.90      0.58      0.69       197
-
-0.6153846153846154
-
-    \end{Verbatim}
-
-    \subsubsection{LogisticRegressionCV}\label{logisticregressioncv}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}106}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegressionCV}
-          \PY{n}{lr\PYZus{}cv\PYZus{}model} \PY{o}{=} \PY{n}{LogisticRegressionCV}\PY{p}{(}\PY{n}{n\PYZus{}jobs}\PY{o}{=}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{Cs}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{refit}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{balanced}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{max\PYZus{}iter}\PY{o}{=}\PY{l+m+mi}{500}\PY{p}{)}  \PY{c+c1}{\PYZsh{} set number of jobs to \PYZhy{}1 which uses all cores to parallelize}
-          \PY{n}{lr\PYZus{}cv\PYZus{}model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{o}{.}\PY{n}{ravel}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}106}]:} LogisticRegressionCV(Cs=3, class\_weight='balanced', cv=10, dual=False,
-                     fit\_intercept=True, intercept\_scaling=1.0, max\_iter=500,
-                     multi\_class='ovr', n\_jobs=-1, penalty='l2', random\_state=42,
-                     refit=False, scoring=None, solver='lbfgs', tol=0.0001,
-                     verbose=0)
-\end{Verbatim}
-            
-    \subsubsection{Predict on Test data}\label{predict-on-test-data}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}107}]:} \PY{n}{lr\PYZus{}cv\PYZus{}predict\PYZus{}test} \PY{o}{=} \PY{n}{lr\PYZus{}cv\PYZus{}model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
-          
-          \PY{c+c1}{\PYZsh{} training metrics}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZob{}0:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}cv\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}cv\PYZus{}predict\PYZus{}test}\PY{p}{)} \PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Classification Report}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
-          \PY{n+nb}{print}\PY{p}{(}\PY{n}{metrics}\PY{o}{.}\PY{n}{classification\PYZus{}report}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{lr\PYZus{}cv\PYZus{}predict\PYZus{}test}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Accuracy: 0.8173
-[[155  29]
- [  7   6]]
-
-Classification Report
-             precision    recall  f1-score   support
-
-          0       0.96      0.84      0.90       184
-          1       0.17      0.46      0.25        13
-
-avg / total       0.90      0.82      0.85       197
+avg / total       0.93      0.81      0.85       224
 
 
     \end{Verbatim}
 
-    \subsubsection{Linear SVC}\label{linear-svc}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}108}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
-          
-          \PY{n}{data} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-          \PY{n}{X} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)} 
-          \PY{n}{Y} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{hadCollision}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-          
-          \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{preprocessing}
-          \PY{n}{X} \PY{o}{=} \PY{n}{preprocessing}\PY{o}{.}\PY{n}{scale}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-          
-          
-          \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}109}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{svm} \PY{k}{import} \PY{n}{LinearSVC}
-          
-          \PY{n}{clf\PYZus{}svc} \PY{o}{=} \PY{n}{LinearSVC}\PY{p}{(}\PY{n}{penalty}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{l1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{dual}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{tol}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}3}\PY{p}{)}
-          \PY{n}{clf\PYZus{}svc}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}109}]:} LinearSVC(C=1.0, class\_weight=None, dual=False, fit\_intercept=True,
-               intercept\_scaling=1, loss='squared\_hinge', max\_iter=1000,
-               multi\_class='ovr', penalty='l1', random\_state=None, tol=0.001,
-               verbose=0)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}110}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{clf\PYZus{}svc}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-0.9083969465648855
-
-    \end{Verbatim}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}111}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{decomposition} \PY{k}{import} \PY{n}{PCA}
-          
-          \PY{n}{pca} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{whiten}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
-          \PY{n}{X\PYZus{}reduced} \PY{o}{=} \PY{n}{pca}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{X}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}112}]:} \PY{n}{pca}\PY{o}{.}\PY{n}{explained\PYZus{}variance\PYZus{}}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}112}]:} array([3.00686209])
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}113}]:} \PY{n}{pca}\PY{o}{.}\PY{n}{explained\PYZus{}variance\PYZus{}ratio\PYZus{}}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}113}]:} array([0.30022715])
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}114}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{pca}\PY{o}{.}\PY{n}{explained\PYZus{}variance\PYZus{}ratio\PYZus{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dimension}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Explain Variance Ratio}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-          \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
-          \PY{c+c1}{\PYZsh{}Scree plot}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_95_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}115}]:} \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X\PYZus{}reduced}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
-          \PY{n}{clf\PYZus{}svc} \PY{o}{=} \PY{n}{LinearSVC}\PY{p}{(}\PY{n}{penalty}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{l1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{dual}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{tol}\PY{o}{=}\PY{l+m+mf}{1e\PYZhy{}3}\PY{p}{)}
-          \PY{n}{clf\PYZus{}svc}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{Y\PYZus{}train}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}115}]:} LinearSVC(C=1.0, class\_weight=None, dual=False, fit\_intercept=True,
-               intercept\_scaling=1, loss='squared\_hinge', max\_iter=1000,
-               multi\_class='ovr', penalty='l1', random\_state=None, tol=0.001,
-               verbose=0)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}116}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{clf\PYZus{}svc}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-0.916030534351145
-
-    \end{Verbatim}
-
-    \subsubsection{MeanShit}\label{meanshit}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}117}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k}{import} \PY{n}{MeanShift}
-          \PY{n}{dataFrame} \PY{o}{=} \PY{n}{df}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
-          
-          \PY{n}{analyzer} \PY{o}{=} \PY{n}{MeanShift}\PY{p}{(}\PY{n}{bandwidth}\PY{o}{=}\PY{l+m+mi}{9}\PY{p}{)}
-          \PY{n}{analyzer}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{dataFrame}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}117}]:} MeanShift(bandwidth=9, bin\_seeding=False, cluster\_all=True, min\_bin\_freq=1,
-               n\_jobs=1, seeds=None)
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}118}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cluster} \PY{k}{import} \PY{n}{estimate\PYZus{}bandwidth}
-          
-          \PY{n}{estimate\PYZus{}bandwidth}\PY{p}{(}\PY{n}{dataFrame}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}118}]:} 8.940736997143448
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}119}]:} \PY{n}{labels} \PY{o}{=} \PY{n}{analyzer}\PY{o}{.}\PY{n}{labels\PYZus{}}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}120}]:} \PY{n}{np}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{n}{labels}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}120}]:} array([0, 1, 2, 3, 4])
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}121}]:} \PY{n}{dataFrame}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cluster\PYZus{}group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{nan}
-          \PY{n}{data\PYZus{}length} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{dataFrame}\PY{p}{)}
-          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{data\PYZus{}length}\PY{p}{)}\PY{p}{:}
-              \PY{n}{dataFrame}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{dataFrame}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{get\PYZus{}loc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cluster\PYZus{}group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{labels}\PY{p}{[}\PY{n}{i}\PY{p}{]}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}122}]:} \PY{n}{dataFrame}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}122}]:}    speed\_mean  steering\_mean  brake\_mean  throttle\_mean  acceleration\_mean  \textbackslash{}
-          0    5.919151       0.503649    0.965743       0.820576           0.030731   
-          1    7.580378       0.499771    0.891302       0.878839          -0.026652   
-          2    9.474048       0.494557    0.952182       0.781126           0.006292   
-          3    3.398595       0.523305    0.960227       0.858795           0.027363   
-          4   11.669419       0.500661    0.891913       0.522365           0.008028   
-          
-             speed\_var  steering\_var  brake\_var  throttle\_var  acceleration\_var  \textbackslash{}
-          0  13.796202      0.000655   0.014468      0.028719          0.039370   
-          1  31.451253      0.000345   0.058767      0.010391          0.063480   
-          2  53.873833      0.001231   0.022506      0.045416          0.106281   
-          3   5.036717      0.000101   0.018643      0.075860          0.027735   
-          4  47.209285      0.000396   0.055982      0.112551          0.159198   
-          
-             hadCollision  cluster\_group  
-          0             0            0.0  
-          1             0            0.0  
-          2             1            2.0  
-          3             0            0.0  
-          4             0            2.0  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}123}]:} \PY{n}{dataFrame}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}123}]:}        speed\_mean  steering\_mean  brake\_mean  throttle\_mean  \textbackslash{}
-          count  655.000000     655.000000  655.000000     655.000000   
-          mean     7.987191       0.502204    0.959427       0.812115   
-          std      3.740045       0.010688    0.052920       0.126159   
-          min      0.015117       0.418696    0.441398       0.199416   
-          25\%      5.757110       0.497913    0.944744       0.771546   
-          50\%      7.474806       0.501098    0.975665       0.831697   
-          75\%      9.599790       0.505841    0.991609       0.883929   
-          max     35.358340       0.561057    1.000000       1.000000   
-          
-                 acceleration\_mean   speed\_var  steering\_var   brake\_var  throttle\_var  \textbackslash{}
-          count         655.000000  655.000000    655.000000  655.000000    655.000000   
-          mean           -0.020020   15.369249      0.000927    0.018102      0.032908   
-          std             0.153846   13.677285      0.002787    0.027826      0.037133   
-          min            -1.779510    0.000251      0.000000    0.000000      0.000000   
-          25\%            -0.008199    7.271839      0.000078    0.000966      0.011291   
-          50\%             0.000143   12.569265      0.000304    0.005730      0.020177   
-          75\%             0.008954   19.953399      0.000662    0.024807      0.039857   
-          max             0.171440  124.624108      0.037609    0.200328      0.226159   
-          
-                 acceleration\_var  hadCollision  cluster\_group  
-          count        655.000000    655.000000     655.000000  
-          mean           0.273928      0.093130       0.123664  
-          std            1.551995      0.290836       0.477287  
-          min            0.000007      0.000000       0.000000  
-          25\%            0.021014      0.000000       0.000000  
-          50\%            0.037177      0.000000       0.000000  
-          75\%            0.074261      0.000000       0.000000  
-          max           19.011509      1.000000       4.000000  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}124}]:} \PY{n}{dataFrameCluster} \PY{o}{=} \PY{n}{dataFrame}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cluster\PYZus{}group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
-          \PY{n}{dataFrameCluster}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}124}]:}                speed\_mean  steering\_mean  brake\_mean  throttle\_mean  \textbackslash{}
-          cluster\_group                                                         
-          0.0              8.057321       0.502291    0.964488       0.812743   
-          1.0              0.059102       0.499933    0.921200       0.997666   
-          2.0             10.773944       0.501072    0.887362       0.695547   
-          3.0             14.881869       0.508793    0.774848       0.680472   
-          4.0             11.093422       0.505333    0.846938       0.686265   
-          
-                         acceleration\_mean   speed\_var  steering\_var  brake\_var  \textbackslash{}
-          cluster\_group                                                           
-          0.0                     0.002517   13.623715  9.198092e-04   0.016341   
-          1.0                    -0.827851    0.002247  7.147318e-08   0.000002   
-          2.0                    -0.013965   52.981628  1.738329e-03   0.058649   
-          3.0                    -0.089193  124.223863  2.419296e-04   0.116260   
-          4.0                    -0.014520  104.649139  5.877635e-04   0.105759   
-          
-                         throttle\_var  acceleration\_var  hadCollision  
-          cluster\_group                                                
-          0.0                0.031277          0.084569      0.078947  
-          1.0                0.000121          7.312980      0.000000  
-          2.0                0.080404          0.121840      0.370370  
-          3.0                0.105195          0.155911      1.000000  
-          4.0                0.155136          0.083050      1.000000  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}125}]:} \PY{n}{dataFrameCluster}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Counts}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{dataFrame}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cluster\PYZus{}group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{size}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-          \PY{n}{dataFrameCluster}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}125}]:}                speed\_mean  steering\_mean  brake\_mean  throttle\_mean  \textbackslash{}
-          cluster\_group                                                         
-          0.0              8.057321       0.502291    0.964488       0.812743   
-          1.0              0.059102       0.499933    0.921200       0.997666   
-          2.0             10.773944       0.501072    0.887362       0.695547   
-          3.0             14.881869       0.508793    0.774848       0.680472   
-          4.0             11.093422       0.505333    0.846938       0.686265   
-          
-                         acceleration\_mean   speed\_var  steering\_var  brake\_var  \textbackslash{}
-          cluster\_group                                                           
-          0.0                     0.002517   13.623715  9.198092e-04   0.016341   
-          1.0                    -0.827851    0.002247  7.147318e-08   0.000002   
-          2.0                    -0.013965   52.981628  1.738329e-03   0.058649   
-          3.0                    -0.089193  124.223863  2.419296e-04   0.116260   
-          4.0                    -0.014520  104.649139  5.877635e-04   0.105759   
-          
-                         throttle\_var  acceleration\_var  hadCollision  Counts  
-          cluster\_group                                                        
-          0.0                0.031277          0.084569      0.078947     608  
-          1.0                0.000121          7.312980      0.000000      17  
-          2.0                0.080404          0.121840      0.370370      27  
-          3.0                0.105195          0.155911      1.000000       2  
-          4.0                0.155136          0.083050      1.000000       1  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}126}]:} \PY{n}{dataFrame}\PY{p}{[}\PY{n}{dataFrame}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cluster\PYZus{}group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mf}{2.0}\PY{p}{]}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}126}]:}        speed\_mean  steering\_mean  brake\_mean  throttle\_mean  \textbackslash{}
-          count   27.000000      27.000000   27.000000      27.000000   
-          mean    10.773944       0.501072    0.887362       0.695547   
-          std      2.968430       0.011725    0.086297       0.127069   
-          min      5.957280       0.463986    0.683428       0.449865   
-          25\%      9.030212       0.497770    0.854411       0.586816   
-          50\%     10.121491       0.500661    0.911678       0.739867   
-          75\%     11.662698       0.506610    0.944540       0.777312   
-          max     21.021074       0.518959    1.000000       0.895491   
-          
-                 acceleration\_mean  speed\_var  steering\_var  brake\_var  throttle\_var  \textbackslash{}
-          count          27.000000  27.000000  2.700000e+01  27.000000     27.000000   
-          mean           -0.013965  52.981628  1.738329e-03   0.058649      0.080404   
-          std             0.048399  10.288581  4.653974e-03   0.055593      0.054671   
-          min            -0.133203  41.688938  8.313171e-07   0.000000      0.015028   
-          25\%            -0.032315  44.988525  2.645179e-04   0.024722      0.040307   
-          50\%            -0.012924  49.399123  4.789259e-04   0.033712      0.055018   
-          75\%             0.002634  59.713751  1.440076e-03   0.087230      0.111449   
-          max             0.097224  77.132035  2.465706e-02   0.200328      0.196903   
-          
-                 acceleration\_var  hadCollision  cluster\_group  
-          count         27.000000     27.000000           27.0  
-          mean           0.121840      0.370370            2.0  
-          std            0.100376      0.492103            0.0  
-          min            0.018910      0.000000            2.0  
-          25\%            0.061914      0.000000            2.0  
-          50\%            0.088126      0.000000            2.0  
-          75\%            0.141884      1.000000            2.0  
-          max            0.463303      1.000000            2.0  
-\end{Verbatim}
-            
 
     % Add a bibliography block to the postdoc
     
